@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        function toColor(num) {
+            num >>>= 0;
+            var b = num & 0xFF,
+                g = (num & 0xFF00) >>> 8,
+                r = (num & 0xFF0000) >>> 16;
+            return "rgba(" + [r, g, b, 1].join(",") + ")";
+        }
+        let data = []
+        for (let i = 0; i < 100; i++) {
+            data.push(Math.random() * 10)
+        }
+        d3.select('body')
+            .selectAll('div')
+            .data(data)
+            .enter()
+            .append('div')
+            .text((d) =>  `$${d.toFixed(2)}`)
+            .style('padding', '1em')
+            .style('color', 'white')
+            .style('font-family', 'monospace')
+            .style('font-size', (d) => `${d / 5}rem`)
+            .style('border-top-right-radius', '2rem')
+            .style('border-bottom-right-radius', '2rem')
+            .style('background', (d) => `linear-gradient(to right, ${toColor(d)}, ${toColor(d + 100)})`)
+            .style('margin', '1px')
+            .style('opacity', (d) => `${d / 10}`)
+            .style('width', (d) => `${d / 10 * 100}%`)
+    </script>
+  </body>
+</html>
