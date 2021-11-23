@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+	<svg id="svg" width="500" height="500">
+        <circle cx="250" cy="250" r="123" fill="#FBF3D5"/>
+    </svg>
+    <svg id="svg" width="500" height="500">
+        <circle cx="250" cy="250" r="123" fill="#5EBA7D"/>
+    </svg>
+    <svg id="svg" width="500" height="500">
+        <circle cx="250" cy="250" r="123" fill="#0063BF"/>
+    </svg>
+    <svg id="svg" width="500" height="500">
+        <circle cx="250" cy="250" r="123" fill="#6649B8"/>
+    </svg>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+        function makeRandomData(n) {
+            const array = []
+            for (let i = 0; i < n; i += 1) {
+                array.push({ a: Math.random(), b: Math.random(), c: Math.random() })
+            }
+            return array
+        }
+        
+        const data = makeRandomData(100)
+        d3.selectAll('#svg')
+        .style('border', '1px solid #000')
+        .selectAll('rect')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('cx', (d, i) => i * 500 / data.length)
+        .attr('cy', d => d.a * 500)
+        .attr('r', d => d.c * 40)
+        .attr('fill', d => `hsl(${360 * d.a}, 100%, 50%)`)
+        .attr('stroke', d => `hsl(${360 * d.b}, 100%, 50%)`)
+        .attr('stroke-width', d => 10 * d.b)
+        .attr('opacity', () => 0.5)
+  </script>
+</body>
+</html>
