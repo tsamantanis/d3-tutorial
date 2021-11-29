@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Using Paths</title>
+
+  <style>
+    body,
+    html {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #svg {
+      border: 1px solid;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <svg id="svg" width="600" height="400"></svg>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <script>
+    const obj = { "YEAR": "1901", "JAN": "17.99", "FEB": "19.43", "MAR": "23.49" }
+    function convertToArray(obj) {
+      const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+      return months.map(month => {
+        const temp = parseFloat(obj[month])
+        return { month, temp }
+      })
+    }
+
+
+    async function handleData() {
+      const width = 600
+      const height = 300
+      const margin = 40
+
+      const data = await d3.csv("Weather Data in India from 1901 to 2017.csv")
+
+      const year_1901 = data[0]
+      const months_1901 = convertToArray(year_1901)
+
+      const year_2017 = data[data.length - 1]
+      const months_2017 = convertToArray(year_2017)
+
+      const xScale = d3.scaleLinear()
+        .domain([0, months_1901.length - 1])
+        .range([margin, width - margin])
+
+      const yScale = d3.scaleLinear()
+        .domain(d3.extent(months_1901, d => d.temp))
+        .range([height - margin, margin])
+
+      const svg = d3.select("#svg")
+      const graph = svg.append("g")
+
+      const lineGen = d3.area()
+        .x((d, i) => xScale(i))
+        .y0(d => yScale(d.temp))
+        .y1(height - margin)
+        .curve(d3.curveBasis)
+
+      graph.append("path")
+        .attr("d", lineGen(months_1901))
+        .attr('fill', '#9E4EF5')
+        .attr('opacity', '0.6')
+
+      graph.append("path")
+        .attr("d", lineGen(months_2017))
+        .attr('fill', '#00D2FB')
+        .attr('opacity', '0.6')
+
+      const monthScale = d3.scaleTime()
+        .domain([new Date('1901-01-01'), new Date('1901-12-01')])
+        .range([margin, width - margin])
+        .nice()
+
+      const bottomAxis = d3.axisBottom(monthScale)
+
+      svg.append("g")
+        .attr("transform", `translate(0, ${height - margin})`)
+        .call(bottomAxis)
+
+      const leftAxis = d3.axisLeft(yScale)
+      
+      svg.append("g")
+        .attr("transform", `translate(${margin}, 0)`)
+        .call(leftAxis)
+    }
+
+    handleData()
+  </script>
+
+</body>
