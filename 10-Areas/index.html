@@ -42,7 +42,7 @@
       const height = 300
       const margin = 40
 
-      const data = await d3.csv("Weather Data in India from 1901 to 2017.csv")
+      const data = await d3.csv("../data/Weather Data in India from 1901 to 2017.csv")
 
       const year_1901 = data[0]
       const months_1901 = convertToArray(year_1901)
@@ -89,7 +89,7 @@
         .call(bottomAxis)
 
       const leftAxis = d3.axisLeft(yScale)
-      
+
       svg.append("g")
         .attr("transform", `translate(${margin}, 0)`)
         .call(leftAxis)
